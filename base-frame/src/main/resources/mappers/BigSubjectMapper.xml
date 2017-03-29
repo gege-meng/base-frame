@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ddu.dao.BigSubjectMapper">
+	<resultMap id="BaseResultMap" type="com.ddu.entity.BigSubject">
+		<id column="id_" property="id" jdbcType="NUMERIC" />
+		<result column="number_" property="number" jdbcType="TINYINT" />
+		<result column="simple_name_" property="simpleName" jdbcType="VARCHAR" />
+		<result column="name_" property="name" jdbcType="VARCHAR" />
+		<result column="state_" property="state" jdbcType="TINYINT" />
+		<result column="parent_id_" property="parentId" jdbcType="NUMERIC" />
+		<result column="remarks_" property="remarks" jdbcType="VARCHAR" />
+		<result column="create_time_" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="lastupdate_time_" property="lastupdateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Columns_Exclude_Id">
+		number_, simple_name_, name_, state_, parent_id_, remarks_, create_time_, lastupdate_time_
+	</sql>
+	<sql id="Base_Columns">
+		id_, number_, simple_name_, name_, state_, parent_id_, remarks_, create_time_, lastupdate_time_
+	</sql>
+	<sql id="Where_Id">
+		where id_ = #{id, jdbcType=NUMERIC}
+	</sql>
+
+	<insert id="insert" parameterType="com.ddu.entity.BigSubject" useGeneratedKeys="true" keyProperty="id">
+		insert into t_big_subject (
+			<include refid="Columns_Exclude_Id" />
+		)
+		values (
+			#{number,jdbcType=TINYINT},
+			#{simpleName,jdbcType=VARCHAR},
+			#{name,jdbcType=VARCHAR},
+			#{state,jdbcType=TINYINT},
+			#{parentId,jdbcType=NUMERIC},
+			#{remarks,jdbcType=VARCHAR},
+			#{createTime,jdbcType=DATE},
+			#{lastupdateTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertObject" parameterType="com.ddu.entity.BigSubject" useGeneratedKeys="true" keyProperty="id">
+		insert into t_big_subject
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="number != null">number_, </if>
+			<if test="simpleName != null"> simple_name_, </if>
+			<if test="name != null"> name_, </if>
+			<if test="state != null">state_, </if>
+			<if test="parentId != null">parent_id_, </if>
+			<if test="remarks != null">remarks_, </if>
+			<if test="createTime != null"> create_time_, </if>
+			<if test="lastupdateTime != null">lastupdate_time_, </if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="number != null"> #{number,jdbcType=TINYINT}, </if>
+			<if test="simpleName != null"> #{simpleName,jdbcType=VARCHAR}, </if>
+			<if test="name != null"> #{name,jdbcType=VARCHAR}, </if>
+			<if test="state != null"> #{state,jdbcType=TINYINT}, </if>
+			<if test="parentId != null">#{parentId,jdbcType=NUMERIC}, </if>
+			<if test="remarks != null">#{remarks,jdbcType=VARCHAR}, </if>
+			<if test="createTime != null"> #{createTime,jdbcType=TIMESTAMP}, </if>
+			<if test="lastupdateTime != null"> #{lastupdateTime,jdbcType=TIMESTAMP}, </if>
+		</trim>
+	</insert>
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from t_big_subject
+		<include refid="Where_Id" />
+	</delete>
+	<update id="update" parameterType="com.ddu.entity.BigSubject">
+		update t_big_subject
+		<set>
+			<if test="number != null"> number_ = #{number,jdbcType=TINYINT}, </if>
+			<if test="simpleName != null"> #{simpleName,jdbcType=VARCHAR}, </if>
+			<if test="name != null"> name_ = #{name,jdbcType=VARCHAR}, </if>
+			<if test="state != null"> state_ = #{state,jdbcType=TINYINT}, </if>
+			<if test="parentId != null"> parent_id_ = #{parentId,jdbcType=NUMERIC}, </if>
+			<if test="remarks != null"> remarks_ = #{remarks,jdbcType=VARCHAR}, </if>
+			<if test="createTime != null"> create_time_ = #{createTime,jdbcType=TIMESTAMP}, </if>
+			<if test="lastupdateTime != null"> lastupdate_time_ = #{lastupdateTime,jdbcType=TIMESTAMP}, </if>
+		</set>
+		<include refid="Where_Id" />
+	</update>
+	<update id="updateStateById" parameterType="com.ddu.entity.BigSubject">
+		update t_big_subject 
+		SET state_= #{state} 
+		<include refid="Where_Id" />
+	</update>
+	<select id="queryOne" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Columns" />
+		from t_big_subject
+		<include refid="Where_Id" />
+	</select>
+	<select id="queryAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Columns" />
+		from t_big_subject
+	</select>
+</mapper>

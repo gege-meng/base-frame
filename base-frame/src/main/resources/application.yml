@@ -10,16 +10,17 @@ spring:
   freemarker:
     template-loader-path: /WEB-INF/
     suffix: .ftl
+    request-context-attribute: request
   resources:
     static-locations: /META-INF/resources/,classpath:/resources/
 mybatis: 
   mapperLocations: classpath:mappers/*.xml
   typeAliasesPackage: com.ddu.entity
 server:
-  address: 127.0.0.1
+  address: 172.29.39.164 #127.0.0.1
   port: 8080
   context-path: /
   session:
-    timeout: 30
+    timeout: 60
 logging:
   file: C:/log.log

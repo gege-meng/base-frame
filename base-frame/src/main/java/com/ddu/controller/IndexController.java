@@ -2,12 +2,12 @@ package com.ddu.controller;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ddu.entity.User;
 import com.ddu.service.UserService;
+import com.ddu.util.ApiResult;
+import com.ddu.util.ConsEnum;
 
 @Controller
 @RequestMapping
@@ -31,20 +33,22 @@ public class IndexController {
 	}
 	
 	@PostMapping("/login")
-	public @ResponseBody Object login(HttpServletRequest request, Model model, User user){
+	public @ResponseBody Object login(HttpServletRequest request, User user){
 		if(StringUtils.isBlank(user.getNumber())){
-			model.addAttribute("result", "编码不能为空!");
-			return false;
+			return new ApiResult<Object>(ConsEnum.Failed, "编码不能为空!");
 		}
 		if(StringUtils.isBlank(user.getName())){
-			model.addAttribute("result", "用户名不能为空!");
-			return false;
+			return new ApiResult<Object>(ConsEnum.Failed, "用户名不能为空!");
 		}
 		
-		user = userService.queryByNameAndNumber(user.getNumber(), user.getName());
+		try {
+			user = userService.queryByNameAndNumber(user.getNumber(), user.getName());
+		} catch (Exception e) {
+			return new ApiResult<Object>(ConsEnum.Service_Exception);
+		}
+		
 		if(user == null){
-			model.addAttribute("result", "用户不存在，请检查编码和用户名是否正确!");
-			return false;
+			return new ApiResult<Object>(ConsEnum.Failed, "用户不存在，请检查编码和用户名是否正确!");
 		}
 		
 //		Cookie[] cookies = request.getCookies();
@@ -54,9 +58,23 @@ public class IndexController {
 		//加入session的方法
 //		getHttpServletRequest().setAttribute(key, value);
 		
+		HttpSession session = request.getSession();
+		session.setAttribute("userId", user.getId());
 		request.getSession().setAttribute("userId", user.getId());
-		model.addAttribute("result", "登录成功!");
-		return true;
+		request.getSession().setAttribute("user", user);
+		return new ApiResult<Object>(ConsEnum.Successed, "登录成功!");
+	}
+	
+	@GetMapping("/loginout")
+	public String loginout(HttpServletRequest request){
+		HttpSession session = request.getSession();
+		if(session.getAttribute("userId") != null)
+			session.removeAttribute("userId");
+		
+		if(session.getAttribute("user") != null)
+			session.removeAttribute("user");
+		
+		return "redirect:/";
 	}
 
 }

@@ -1,16 +1,6 @@
-<!DOCTYPE html>  
-<html lang="en">  
-<head>
-	<style type="text/css">
-		body{font-family: 'Microsoft YaHei'; font-family: Arial,'Times New Roman','Microsoft YaHei',SimHei;}
-		
-	</style>
-</head>
-<body>  
-	<h1>list</h1>
-	<div class=""> 
-		<!--<img class="" src="/img/zi.jpg" alt="到百度首页" title="到百度首页">-->
-	</div>
+<#include "/common/template.ftl"/>
+<@htmlHead title="首页"><#-- 自定的 css --></@htmlHead>
+<@htmlBody>
 	<table>
 		<#list datas as data>
 		    <tr>
@@ -20,5 +10,6 @@
 		</#list>
 	</table>
 	<a id="name" href="/user/add">新增</a>
-</body>  
-</html>
+</@htmlBody>
+<@htmlFooter><#-- 自定义的js --></@htmlFooter>
+
